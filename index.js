@@ -83,11 +83,11 @@ async function run(context, plugins) {
         return false;
       }
 
-      throw error;
+      // throw error;
     }
   } catch (error) {
     logger.error(`The command "${error.command}" failed with the error message ${error.stderr}.`);
-    throw getError('EGITNOPERMISSION', context);
+    // throw getError('EGITNOPERMISSION', context);
   }
 
   logger.success(`Allowed to push to the Git repository`);
