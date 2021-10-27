@@ -25,6 +25,8 @@ marked.setOptions({renderer: new TerminalRenderer()});
 
 /* eslint complexity: off */
 async function run(context, plugins) {
+  await plugins.config(context);
+
   const {cwd, env, options, logger} = context;
   const {isCi, branch, prBranch, isPr} = context.envCi;
   const ciBranch = isPr ? prBranch : branch;
