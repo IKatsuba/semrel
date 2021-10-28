@@ -25,8 +25,6 @@ marked.setOptions({renderer: new TerminalRenderer()});
 
 /* eslint complexity: off */
 async function run(context, plugins) {
-  const [repositoryUrl] = await plugins.getAuthUrl(context);
-
   const {cwd, env, options, logger} = context;
   const {isCi, branch, prBranch, isPr} = context.envCi;
   const ciBranch = isPr ? prBranch : branch;
@@ -55,7 +53,8 @@ async function run(context, plugins) {
   // Verify config
   await verify(context);
 
-  options.repositoryUrl = repositoryUrl || await getGitAuthUrl({...context, branch: {name: ciBranch}});
+  const [repositoryUrl] = await plugins.getGitAuthUrl(context);
+  options.repositoryUrl = repositoryUrl || (await getGitAuthUrl({...context, branch: {name: ciBranch}}));
   context.branches = await getBranches(options.repositoryUrl, ciBranch, context);
   context.branch = context.branches.find(({name}) => name === ciBranch);
 
@@ -85,11 +84,11 @@ async function run(context, plugins) {
         return false;
       }
 
-      // throw error;
+      throw error;
     }
   } catch (error) {
     logger.error(`The command "${error.command}" failed with the error message ${error.stderr}.`);
-    // throw getError('EGITNOPERMISSION', context);
+    throw getError('EGITNOPERMISSION', context);
   }
 
   logger.success(`Allowed to push to the Git repository`);
