@@ -5,6 +5,7 @@ const toTags = (versions) => versions.map((version) => ({version}));
 
 test('Maintenance branches - initial state', (t) => {
   const maintenance = [
+    {name: '0.x', channel: '0.x', tags: []},
     {name: '1.x', channel: '1.x', tags: []},
     {name: '1.1.x', tags: []},
     {name: '1.2.x', tags: []},
@@ -20,6 +21,14 @@ test('Maintenance branches - initial state', (t) => {
       mergeRange,
     })),
     [
+      {
+        accept: ['patch', 'minor'],
+        channel: '0.x',
+        mergeRange: '>=0.0.0 <1.0.0',
+        name: '0.x',
+        range: '>=0.0.0 <1.0.0',
+        type: 'maintenance',
+      },
       {
         type: 'maintenance',
         name: '1.1.x',
